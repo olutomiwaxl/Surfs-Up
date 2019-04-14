@@ -27,8 +27,8 @@ def welcome():
         f"/api/precipitation<br/>"
         f"/api/stations<br/>"
         f"/api/temperature<br/>"
-        f"/api/<start>"
-        f"/api/"
+        f"/api/<start><br/>"
+        f"/api/<start>/<end>"
     )
 
 @app.route("/api/precipitation")
@@ -64,6 +64,17 @@ def temperature():
         temp_dict["temperature"] = tobs
         all_temp.append(temp_dict)
     return jsonify(all_temp)
+
+@app.route("/api/<start>/<end>")
+def api(start, end):
+    """"minimum, maximum and average temperature for a date range"""
+
+    result = session.query(func.min(Measurement.tobs),\
+         func.max(Measurement.tobs), func.avg(Measurement.tobs)).\
+        filter(Measurement.date >= start).\
+        filter(Measurement.date <= end).all()
+    all_result = list(np.ravel(result))
+    return jsonify(all_result)
 
 
 if __name__ == "__main__":
