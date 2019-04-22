@@ -66,7 +66,7 @@ def temperature():
     return jsonify(all_temp)
 
 @app.route("/api/<start>/<end>")
-def api(start, end):
+def api(start, end = 0):
     """"minimum, maximum and average temperature for a date range"""
 
     result = session.query(func.min(Measurement.tobs),\
